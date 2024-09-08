@@ -74,9 +74,7 @@ export const NFTDisplay = ({ mintData }) => {
     
             const anchorProvider = new AnchorProvider(connection, {
                 publicKey: new PublicKey(walletAddress),
-                signTransaction
-
-
+                signTransaction: signTransaction,
             }, {
                 commitment: "confirmed",
             });
@@ -86,7 +84,7 @@ export const NFTDisplay = ({ mintData }) => {
             const accounts = {
                 signer: anchorProvider.wallet.publicKey,
                 payer: anchorProvider.wallet.publicKey,
-                // asset: assetPublicKey,
+                asset: assetPublicKey,
                 database: new PublicKey('5ahNFeoYAS4HayZWK6osa6ZiocNojNJcfzgUJASicRbf'),
             };
     
@@ -94,12 +92,12 @@ export const NFTDisplay = ({ mintData }) => {
                 .createAsset(
                     nftName,
                     new BN(userData.followerCount),
-                    new BN(userData.dscvrPoints),
                     new BN(userData.streak?.dayCount),
+                    new BN(userData.dscvrPoints),
                     username
                 )
                 .accounts(accounts)
-                // .signers([asset])
+                .signers([asset])
                 .rpc(); 
     
             // return transaction;
