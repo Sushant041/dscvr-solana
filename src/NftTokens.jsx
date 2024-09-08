@@ -112,23 +112,6 @@ export const NFTDisplay = ({ mintData }) => {
         return null;
     };
 
-    
-    // const handleMint = async (nftName, username) => {
-    //     const transaction = await mintNFT(nftName, username);
-    //     if (transaction) {
-    //         const signedTx = await signTransaction(transaction);
-    //         if (signedTx) {
-    //             console.log("NFT minted successfully!");
-    //             toast.success("NFT successfully minted!");
-    //         } else {
-    //             toast.error("Failed to sign and send the transaction.");
-    //         }
-    //     }
-    // };
-    
-
-
-
     return (
         <div className="flex flex-wrap text-xs justify-around p-4">
             {nfts.map((nft, index) => {

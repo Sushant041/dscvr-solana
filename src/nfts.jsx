@@ -18,7 +18,7 @@ const nfts = [
     },
     {
       name: "Streak Seeker",
-      codeName : "streak_3",
+      codeName : "streak_days_3",
       symbol: "ACHV",
       description: "Congratulations on hitting a 3-day streak on the app! This Streak Seeker token is your badge of consistency and dedication.",
       image: "https://res.cloudinary.com/dbo7hzofg/image/upload/w_1000,ar_1:1,c_fill,g_auto,e_art:hokusai/v1725465190/days_achievment_sglknm.jpg",
