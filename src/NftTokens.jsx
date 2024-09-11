@@ -38,6 +38,7 @@ export const NFTDisplay = ({ mintData }) => {
   const [userData, setUserData] = useState(null);
   const [nftName, setNftName] = useState('');
   const [isConfirmModalOpen, setisConfirmModalOpen] = useState(false);
+  const [Loading, setLoading] = useState(false);
 
   const fetchUserData = async (username) => {
     try {
@@ -46,7 +47,7 @@ export const NFTDisplay = ({ mintData }) => {
       setUserData(data.userByName);
       setLoading(false);
     } catch (err) {
-      setError("Failed to fetch user data");
+      toast.error("Failed to fetch user data");
       setLoading(false);
     }
   };
