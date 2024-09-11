@@ -173,32 +173,39 @@ export const NFTDisplay = ({ mintData }) => {
         // } else {
           // Max cap not reached, apply the mint conditions for specific indexes
           if (index === 2) {
-            // First NFT: Check if dscvrPoints >= 1,000,000 1000000000
-            if (userData?.dscvrPoints >= 0 && !isAlreadyMinted) {
-              mintCondition = (
-                <button
-                  className="text-sm w-full text-indigo-400"
-                  onClick={() => { setNftName(nft.codeName); setisConfirmModalOpen(true); }}
-                >
-                  Mint
-                </button>
-              );
-            } else if (isAlreadyMinted) {
-              mintCondition = (
-                <p className="text-sm text-green-500 font-semibold">
-                  Already Minted
-                </p>
-              );
-            } else {
-              mintCondition = (
-                <button
-                  className="text-sm w-full hover:border-red-600 text-red-500"
-                  disabled="true"
-                >
-                  Locked
-                </button>
-              );
-            }
+            mintCondition = (
+              <button
+                className="text-sm w-full text-indigo-400"
+                onClick={() => { setNftName(nft.codeName); setisConfirmModalOpen(true); }}
+              >
+                Mint
+              </button>)
+            // First NFT: Check if dscvrPoints >= 1,000,000
+            // if (userData?.dscvrPoints >= 1000000000 && !isAlreadyMinted) {
+            //   mintCondition = (
+            //     <button
+            //       className="text-sm w-full text-indigo-400"
+            //       onClick={() => { setNftName(nft.codeName); setisConfirmModalOpen(true); }}
+            //     >
+            //       Mint
+            //     </button>
+            //   );
+            // } else if (isAlreadyMinted) {
+            //   mintCondition = (
+            //     <p className="text-sm text-green-500 font-semibold">
+            //       Already Minted
+            //     </p>
+            //   );
+            // } else {
+            //   mintCondition = (
+            //     <button
+            //       className="text-sm w-full hover:border-red-600 text-red-500"
+            //       disabled="true"
+            //     >
+            //       Locked
+            //     </button>
+            //   );
+            // }
           } else if (index === 0) {
             // Second NFT: Check if followerCount >= 1
             if (userData?.followerCount >= 1 && !isAlreadyMinted) {
