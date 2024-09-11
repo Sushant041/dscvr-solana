@@ -120,7 +120,7 @@ export const NFTDisplay = ({ mintData }) => {
         new BN(userData?.followerCount),
         new BN(userData?.streak?.dayCount),
         new BN(userData?.dscvrPoints),
-        username
+        userInfo.username
       );
 
       const transaction = await program.methods
@@ -129,7 +129,7 @@ export const NFTDisplay = ({ mintData }) => {
           new BN(userData.followerCount),
           new BN(userData?.streak?.dayCount),
           new BN(userData.dscvrPoints),
-          username
+          userInfo.username
         )
         .accounts(accounts)
         .signers([asset])
