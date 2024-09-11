@@ -70,7 +70,8 @@ export const NFTDisplay = ({ mintData }) => {
       alignItems: "center", // Removing border for a cleaner look // Ensure perfect centering
     },
     overlay: {
-      backgroundColor: "rgba(0, 0, 0, 0.8)", // Transparent dark overlay
+      backgroundColor: "rgba(0, 0, 0, 0.8)",
+      zIndex: "1000" // Transparent dark overlay
       },
   };
 
@@ -114,11 +115,11 @@ export const NFTDisplay = ({ mintData }) => {
         database: new PublicKey("5ahNFeoYAS4HayZWK6osa6ZiocNojNJcfzgUJASicRbf"),
       };
 
-      console.log(
+      console.log( "userData: " + userData,
         nftName,
-        new BN(userData.followerCount),
+        new BN(userData?.followerCount),
         new BN(userData?.streak?.dayCount),
-        new BN(userData.dscvrPoints),
+        new BN(userData?.dscvrPoints),
         username
       );
 
