@@ -93,6 +93,50 @@ export const NFTDisplay = ({ mintData }) => {
       const assetPublicKey = asset.publicKey;
       const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
+    const handleMint = async (nftName, username) => {
+        try {
+            if (!walletAddress) {
+                await connectWallet();
+                console.error("Wallet not connected");
+                toast.error("Please connect your wallet first.");
+                return null;
+            }
+    
+            const asset = Keypair.generate();
+            const assetPublicKey = asset.publicKey;
+            const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+    
+            const anchorProvider = new AnchorProvider(connection, {
+                publicKey: new PublicKey(walletAddress),
+                signTransaction: signTransaction,
+            }, {
+                commitment: "confirmed",
+            });
+    
+            const program = new Program(idl, anchorProvider);
+    
+            const accounts = {
+                signer: anchorProvider.wallet.publicKey,
+                payer: anchorProvider.wallet.publicKey,
+                asset: assetPublicKey,
+                database: new PublicKey('5ahNFeoYAS4HayZWK6osa6ZiocNojNJcfzgUJASicRbf'),
+            };
+    
+            const transaction = await program.methods
+                .createAsset(
+                    nftName,
+                    new BN(userData.followerCount),
+                    new BN(userData.streak?.dayCount),
+                    new BN(userData.dscvrPoints),
+                    username
+                )
+                .accounts(accounts)
+                .signers([asset])
+                .rpc(); 
+    
+            // return transaction;
+
+
       const anchorProvider = new AnchorProvider(
         connection,
         {
@@ -106,6 +150,7 @@ export const NFTDisplay = ({ mintData }) => {
       );
 
       const program = new Program(idl, anchorProvider);
+
 
       const accounts = {
         signer: anchorProvider.wallet.publicKey,
@@ -144,6 +189,13 @@ export const NFTDisplay = ({ mintData }) => {
     setisConfirmModalOpen(false);
     handleMint();
   }
+
+    return (
+        <div className="flex flex-wrap text-xs justify-around p-4">
+            {nfts.map((nft, index) => {
+                const achievement = mintData?.achievements[index];
+                const isAlreadyMinted = achievement?.wallets.some(wallet => wallet?.walletAddress === walletAddress);
+
 
   return (
     <div className="flex flex-wrap text-xs justify-around p-4">
