@@ -7,6 +7,7 @@ import BN from "bn.js";
 import { PublicKey, clusterApiUrl, Connection, Keypair } from "@solana/web3.js";
 import { AnchorProvider, Program } from "@coral-xyz/anchor";
 import { toast } from "react-toastify";
+import Modal from "react-modal";
 
 const client = new GraphQLClient("https://api.dscvr.one/graphql");
 
@@ -35,8 +36,8 @@ export const NFTDisplay = ({ mintData }) => {
     signAllTransactions,
   } = useCanvasWallet();
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [nftName, setNftName] = useState('');
+  const [isConfirmModalOpen, setisConfirmModalOpen] = useState(false);
 
   const fetchUserData = async (username) => {
     try {
@@ -50,13 +51,36 @@ export const NFTDisplay = ({ mintData }) => {
     }
   };
 
+  const customStyles = {
+    content: {
+      position: "absolute",
+      inset: "12% 40px 40px 5%",
+      border: "none",
+      backgroundColor: "rgb(30, 41, 59)",
+      overflow: "auto",
+      borderRadius: "8px",
+      outline: "none",
+      padding: "20px",
+      color: "rgb(255, 255, 255)",
+      width: "400px",
+      margin: "auto",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center", // Removing border for a cleaner look // Ensure perfect centering
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.8)", // Transparent dark overlay
+      },
+  };
+
   useEffect(() => {
     if (userInfo) {
       fetchUserData(userInfo.username);
     }
   }, [userInfo]);
 
-  const handleMint = async (nftName, username) => {
+  const handleMint = async () => {
     try {
       if (!walletAddress) {
         await connectWallet();
@@ -116,6 +140,11 @@ export const NFTDisplay = ({ mintData }) => {
     }
   };
 
+  const handleConfirm = () =>{
+    setisConfirmModalOpen(false);
+    handleMint();
+  }
+
   return (
     <div className="flex flex-wrap text-xs justify-around p-4">
       {nfts.map((nft, index) => {
@@ -126,22 +155,22 @@ export const NFTDisplay = ({ mintData }) => {
 
         let mintCondition = null;
 
-        if (achievement?.currentCount >= achievement?.maxNftCap) {
+        // if (achievement?.currentCount >= achievement?.maxNftCap) {
           // If max cap is reached, check if user already minted
-          if (isAlreadyMinted) {
-            mintCondition = (
-              <p className="text-sm text-green-500 font-semibold">
-                Already Minted
-              </p>
-            );
-          } else {
-            mintCondition = (
-              <p className="text-sm w-full text-red-500" disabled="true">
-                Max limit reached
-              </p>
-            );
-          }
-        } else {
+        //   if (isAlreadyMinted) {
+        //     mintCondition = (
+        //       <p className="text-sm text-green-500 font-semibold">
+        //         Already Minted
+        //       </p>
+        //     );
+        //   } else {
+        //     mintCondition = (
+        //       <p className="text-sm w-full text-red-500" disabled="true">
+        //         Max limit reached
+        //       </p>
+        //     );
+        //   }
+        // } else {
           // Max cap not reached, apply the mint conditions for specific indexes
           if (index === 2) {
             // First NFT: Check if dscvrPoints >= 1,000,000
@@ -149,7 +178,7 @@ export const NFTDisplay = ({ mintData }) => {
               mintCondition = (
                 <button
                   className="text-sm w-full text-indigo-400"
-                  onClick={() => handleMint(nft.codeName, userInfo.username)}
+                  onClick={() => { setNftName(nft.codeName); setisConfirmModalOpen(true); }}
                 >
                   Mint
                 </button>
@@ -176,7 +205,7 @@ export const NFTDisplay = ({ mintData }) => {
               mintCondition = (
                 <button
                   className="text-sm w-full text-indigo-400"
-                  onClick={() => handleMint(nft.codeName, userInfo.username)}
+                  onClick={() => { setNftName(nft.codeName); setisConfirmModalOpen(true); }}
                 >
                   Mint
                 </button>
@@ -203,7 +232,7 @@ export const NFTDisplay = ({ mintData }) => {
               mintCondition = (
                 <button
                   className="text-sm w-full text-indigo-400"
-                  onClick={() => handleMint(nft.codeName, userInfo.username)}
+                  onClick={() => { setNftName(nft.codeName); setisConfirmModalOpen(true); }}
                 >
                   Mint
                 </button>
@@ -233,13 +262,13 @@ export const NFTDisplay = ({ mintData }) => {
             ) : (
               <button
                 className="text-sm w-full text-indigo-400"
-                onClick={() => handleMint(nft.codeName, userInfo.username)}
+                onClick={() => { setNftName(nft.codeName); setisConfirmModalOpen(true); }}
               >
                 Mint
               </button>
             );
           }
-        }
+        // }
 
         return (
           <div
@@ -289,6 +318,71 @@ export const NFTDisplay = ({ mintData }) => {
           </div>
         );
       })}
+      <Modal
+        style={customStyles}
+        isOpen={isConfirmModalOpen}
+        onRequestClose={() => setisConfirmModalOpen(false)}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignContent: "center",
+          }}
+        >
+          <p style={{
+            background: "#1a1e1e",
+            padding: "10px",
+            borderRadius: "5px",
+            color: "orange",
+            fontSize: "20px",
+          }}>
+            Before making this transection make sure you have enough balance in
+            your wallet!!
+          </p>
+          <div>
+            <button
+              type="button"
+              style={{
+                padding: "12px 24px",
+                border: "none",
+                width: "100%",
+                borderRadius: "4px",
+                backgroundColor: "rgb(99, 102, 241)",
+                color: "#fff",
+                cursor: "pointer",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                transition: "background-color 0.3s ease",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+              onClick={handleConfirm}
+            >
+              Confirm
+            </button>
+            <button
+              type="button"
+              style={{
+                padding: "12px 24px",
+                border: "none",
+                width: "100%",
+                borderRadius: "4px",
+                backgroundColor: "#FF4C4C",
+                color: "#fff",
+                cursor: "pointer",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                transition: "background-color 0.3s ease",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+              onClick={() => setisConfirmModalOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
